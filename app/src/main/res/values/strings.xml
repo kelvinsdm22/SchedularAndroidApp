@@ -1,0 +1,49 @@
+<resources>
+    <string name="app_name">Scheduler</string>
+
+    <string name="tasks_title">My Tasks</string>
+    <string name="no_tasks">No tasks yet.\nTap + to add one (e.g. \"Outlier application\", 8 hrs).</string>
+    <string name="add_task">Add task</string>
+    <string name="edit_task">Edit task</string>
+
+    <string name="task_name">Task name</string>
+    <string name="duration_hours">Total duration (hours)</string>
+    <string name="start_hour">Preferred start hour (0–23)</string>
+    <string name="save">Save</string>
+    <string name="delete">Delete</string>
+    <string name="cancel">Cancel</string>
+
+    <string name="slot_length_note">Each time slot is 4 hours.</string>
+    <string name="add_slot">Add time slot</string>
+    <string name="confirm_attendance">Confirm</string>
+    <string name="postpone">Postpone</string>
+    <string name="reschedule">Reschedule</string>
+    <string name="remove_slot">Remove</string>
+
+    <string name="status_pending">Pending</string>
+    <string name="status_confirmed">Confirmed</string>
+    <string name="status_postponed">Postponed</string>
+    <string name="status_missed">Missed</string>
+
+    <string name="progress_fmt">%1$d / %2$d hrs confirmed · %3$d hrs scheduled</string>
+    <string name="need_more_slots_fmt">%1$d more hrs need a slot</string>
+    <string name="task_complete">Task complete 🎉</string>
+
+    <string name="channel_alarm_name">Time slot alerts</string>
+    <string name="channel_alarm_desc">Reminders when a scheduled time slot is due</string>
+    <string name="channel_ongoing_name">Next up</string>
+    <string name="channel_ongoing_desc">Summary of your next time slot</string>
+    <string name="menu_next_up_notification">Show \"Next up\" notification</string>
+
+    <string name="notif_reminder_title_fmt">Starts in 15 min: %1$s</string>
+    <string name="notif_start_title_fmt">Now: %1$s</string>
+    <string name="notif_slot_text_fmt">4 hr time slot · %1$s</string>
+    <string name="notif_next_up_fmt">Next: %1$s</string>
+    <string name="notif_next_up_time_fmt">%1$s at %2$s</string>
+    <string name="confirmed_toast">Marked as confirmed</string>
+
+    <string name="perm_exact_alarm_rationale">Allow exact alarms so time slot alerts fire on time.</string>
+    <string name="allow">Allow</string>
+    <string name="remove_slot_confirm">Remove this time slot?</string>
+    <string name="delete_task_confirm">Delete this task and all its time slots?</string>
+</resources>

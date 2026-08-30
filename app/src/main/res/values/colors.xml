@@ -1,0 +1,10 @@
+<resources>
+    <color name="primary">#3F51B5</color>
+    <color name="primary_dark">#303F9F</color>
+    <color name="accent">#FF4081</color>
+    <color name="status_pending">#F9A825</color>
+    <color name="status_confirmed">#2E7D32</color>
+    <color name="status_postponed">#1565C0</color>
+    <color name="status_missed">#C62828</color>
+    <color name="white">#FFFFFF</color>
+</resources>

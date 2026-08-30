@@ -1,0 +1,16 @@
+# Normalise line endings so the repo is consistent across OSes.
+* text=auto eol=lf
+
+# Windows-only scripts keep CRLF.
+*.bat text eol=crlf
+
+# The Gradle wrapper script must stay LF to run on Linux/macOS/CI.
+gradlew text eol=lf
+
+# Binary assets: never touch.
+*.png binary
+*.jpg binary
+*.webp binary
+*.jar binary
+*.keystore binary
+*.apk binary
