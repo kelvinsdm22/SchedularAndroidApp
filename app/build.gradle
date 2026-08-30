@@ -4,6 +4,25 @@ plugins {
     id 'com.google.devtools.ksp'
 }
 
+// Release signing config is pulled from (in order of precedence):
+//   1. environment variables  (KEYSTORE_FILE / KEYSTORE_PASSWORD / KEY_ALIAS / KEY_PASSWORD) — used by CI
+//   2. keystore.properties in the project root                                               — used locally
+// If neither is present, `assembleRelease` still runs but produces an unsigned APK.
+def keystorePropsFile = rootProject.file('keystore.properties')
+def keystoreProps = new Properties()
+if (keystorePropsFile.exists()) {
+    keystoreProps.load(new FileInputStream(keystorePropsFile))
+}
+def signingStoreFile = System.getenv('KEYSTORE_FILE') ?: keystoreProps['storeFile']
+def signingStorePassword = System.getenv('KEYSTORE_PASSWORD') ?: keystoreProps['storePassword']
+def signingKeyAlias = System.getenv('KEY_ALIAS') ?: keystoreProps['keyAlias']
+def signingKeyPassword = System.getenv('KEY_PASSWORD') ?: keystoreProps['keyPassword']
+def hasReleaseSigning = signingStoreFile != null && !signingStoreFile.isEmpty()
+
+// On CI these come from the pushed tag; locally they fall back to 1 / "1.0".
+def appVersionCode = (System.getenv('VERSION_CODE') ?: '1').toInteger()
+def appVersionName = System.getenv('RELEASE_VERSION') ?: '1.0'
+
 android {
     namespace 'com.jengadirect.scheduler'
     compileSdk 35
@@ -13,8 +32,8 @@ android {
         applicationId 'com.jengadirect.scheduler'
         minSdk 21
         targetSdk 35
-        versionCode 1
-        versionName '1.0'
+        versionCode appVersionCode
+        versionName appVersionName
         // Let AGP rasterise vectors to PNGs for API < 24 so the launcher icon
         // renders on Android 5.x / 6.0 as well.
         vectorDrawables.useSupportLibrary = false
@@ -31,10 +50,25 @@ android {
     buildFeatures {
         viewBinding true
     }
+
+    signingConfigs {
+        if (hasReleaseSigning) {
+            release {
+                storeFile rootProject.file(signingStoreFile)
+                storePassword signingStorePassword
+                keyAlias signingKeyAlias
+                keyPassword signingKeyPassword
+            }
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            if (hasReleaseSigning) {
+                signingConfig signingConfigs.release
+            }
         }
     }
 }

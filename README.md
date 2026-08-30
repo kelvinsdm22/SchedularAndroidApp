@@ -8,6 +8,13 @@ puts them on a calendar, and fires notifications when each slot is due so you ca
 - **minSdk 21** (Android 5.0 Lollipop) · **targetSdk 35**
 - Kotlin · Room · AlarmManager · no network, no accounts, all data on‑device
 
+## Download
+
+**[⬇ Download the latest APK](https://github.com/kelvinsdm22/SchedularAndroidApp/releases/latest/download/scheduler-app.apk)**
+
+Enable *Install unknown apps* for your browser/file manager, open the APK, install.
+Works on Android 5.0 and newer. All releases: <https://github.com/kelvinsdm22/SchedularAndroidApp/releases>
+
 ## Features
 
 | Requirement | How it works |
@@ -57,9 +64,35 @@ APK: `app/build/outputs/apk/debug/app-debug.apk`
 
 ### CI
 
-`.github/workflows/build.yml` builds the debug APK and runs lint on every push /
-PR to `main` (and on manual dispatch). Grab the APK from the run's
-**Artifacts → scheduler-debug-apk**.
+- **`.github/workflows/build.yml`** — builds the debug APK and runs lint on every
+  push / PR to `main`. Grab the APK from the run's **Artifacts → scheduler-debug-apk**.
+- **`.github/workflows/release.yml`** — on a pushed `v*` tag, builds a **signed**
+  release APK and publishes a GitHub Release with `scheduler-app.apk` attached, so
+  `releases/latest/download/scheduler-app.apk` always points at the newest build.
+
+### Cutting a release
+
+One‑time: add these repository secrets (Settings → Secrets and variables → Actions):
+
+| Secret | Value |
+|---|---|
+| `KEYSTORE_BASE64` | `base64 -w0 scheduler-release.jks` |
+| `KEYSTORE_PASSWORD` | keystore password |
+| `KEY_ALIAS` | `scheduler` |
+| `KEY_PASSWORD` | key password |
+
+Then:
+
+```bash
+git tag v1.0.0
+git push origin v1.0.0
+```
+
+Local signed build (needs `keystore.properties` in the project root, git‑ignored):
+
+```bash
+./gradlew assembleRelease   # -> app/build/outputs/apk/release/app-release.apk
+```
 
 Install on a device / emulator:
 

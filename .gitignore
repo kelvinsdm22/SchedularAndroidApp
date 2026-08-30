@@ -8,3 +8,8 @@
 /captures
 .externalNativeBuild
 .cxx
+
+# Signing material — never commit
+*.jks
+*.keystore
+keystore.properties
