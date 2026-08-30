@@ -55,6 +55,12 @@ Requires JDK 17+ and the Android SDK (platform 35, build‑tools 35.0.0).
 
 APK: `app/build/outputs/apk/debug/app-debug.apk`
 
+### CI
+
+`.github/workflows/build.yml` builds the debug APK and runs lint on every push /
+PR to `main` (and on manual dispatch). Grab the APK from the run's
+**Artifacts → scheduler-debug-apk**.
+
 Install on a device / emulator:
 
 ```bash
