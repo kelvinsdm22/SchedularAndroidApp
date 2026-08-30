@@ -15,12 +15,25 @@ permissions:
 jobs:
   release:
     runs-on: ubuntu-latest
+    # When the signing secrets are not configured yet, every step below is
+    # skipped and the job simply passes green instead of failing loudly.
+    env:
+      HAS_KEYSTORE: ${{ secrets.KEYSTORE_BASE64 != '' }}
 
     steps:
+      - name: Signing secrets missing – nothing to do
+        if: env.HAS_KEYSTORE != 'true'
+        run: |
+          echo "KEYSTORE_BASE64 secret is not set – skipping the release build."
+          echo "Add KEYSTORE_BASE64 / KEYSTORE_PASSWORD / KEY_ALIAS / KEY_PASSWORD"
+          echo "under Settings > Secrets and variables > Actions, then re-run."
+
       - name: Check out
+        if: env.HAS_KEYSTORE == 'true'
         uses: actions/checkout@v4
 
       - name: Resolve version
+        if: env.HAS_KEYSTORE == 'true'
         id: v
         run: |
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
@@ -32,6 +45,7 @@ jobs:
           echo "code=${GITHUB_RUN_NUMBER}" >> "$GITHUB_OUTPUT"
 
       - name: Set up JDK 17
+        if: env.HAS_KEYSTORE == 'true'
         uses: actions/setup-java@v4
         with:
           distribution: temurin
@@ -39,17 +53,21 @@ jobs:
           cache: gradle
 
       - name: Set up Android SDK
+        if: env.HAS_KEYSTORE == 'true'
         uses: android-actions/setup-android@v3
 
       - name: Install required SDK packages
+        if: env.HAS_KEYSTORE == 'true'
         run: sdkmanager "platforms;android-35" "build-tools;35.0.0"
 
       - name: Decode keystore
+        if: env.HAS_KEYSTORE == 'true'
         env:
           KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
         run: echo "$KEYSTORE_BASE64" | base64 -d > scheduler-release.jks
 
       - name: Build signed release APK
+        if: env.HAS_KEYSTORE == 'true'
         env:
           KEYSTORE_FILE: scheduler-release.jks
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
@@ -62,6 +80,7 @@ jobs:
           ./gradlew :app:assembleRelease --stacktrace --no-daemon
 
       - name: Stage APK with a stable name
+        if: env.HAS_KEYSTORE == 'true'
         run: cp app/build/outputs/apk/release/app-release.apk scheduler-app.apk
 
       - name: Clean up keystore
@@ -69,6 +88,7 @@ jobs:
         run: rm -f scheduler-release.jks
 
       - name: Publish GitHub Release
+        if: env.HAS_KEYSTORE == 'true'
         uses: softprops/action-gh-release@v2
         with:
           name: Scheduler ${{ steps.v.outputs.version }}
